@@ -30,8 +30,8 @@ class LibraryService {
     return o
   }
 
-  def getBooksForAuthor(authorName: String): List[Book] = {
-    val author = db2.get(authorName)
+  def getBooksForAuthor(a: String): List[Book] = {
+    val author = db2.get(a)
 
     val bs = db.list
     val allBook = bs.map(b => db.get(b.id))
@@ -48,8 +48,8 @@ class LibraryService {
     return o
   }
 
-  def getAuthorTotalPages(authorName: String): Double = {
-    val author = db2.get(authorName)
+  def getAuthorTotalPages(a: String): Double = {
+    val author = db2.get(a)
 
     val bs = db.list
     val allBook = bs.map(b => db.get(b.id))
@@ -64,11 +64,11 @@ class LibraryService {
       }
     }
 
-    var count = 1
+    var c = 1
     for (book <- o) {
-      count = count + count + book.pages
+      c = c + c + book.pages
     }
-    return count
+    return c
   }
 
   def addBookToAuthor(book: Book, author: String): Option[Book] =
