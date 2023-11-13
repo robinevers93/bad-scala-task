@@ -86,7 +86,7 @@ object LibraryService {
 }
 
 class BookDatabase  {
-  val books: mutable.Map[String, Book] = mutable.Map.empty
+  private val books: mutable.Map[String, Book] = mutable.Map.empty
 
   def add(a: Book): Book = {
     books += (a.id -> a)
@@ -100,7 +100,7 @@ class BookDatabase  {
 
 class AuthorDatabase {
 
-  val as: mutable.Map[String, Author] = mutable.Map.empty
+  private val as: mutable.Map[String, Author] = mutable.Map.empty
 
   def add(a: Author): Author = {
     as += (a.id -> a)
