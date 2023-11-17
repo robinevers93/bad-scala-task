@@ -31,7 +31,7 @@ class LibraryService {
   }
 
   def getBooksForAuthor(a: String): List[Book] = {
-    val author = db2.get(a)
+    val author = db2.getByName(a)
 
     val bs = db.list
     val allBook = bs.map(b => db.get(b.id))
@@ -41,7 +41,7 @@ class LibraryService {
       if (o.contains(book)) {
         "the book is already in the list"
       }
-      if (book.authorName == author.name) {
+      if (book.authorName == author.get.name) {
         o = o :+ book
       }
     }
