@@ -4,9 +4,9 @@ import org.scalatest.wordspec.AnyWordSpec
 class Test extends AnyWordSpec with Matchers {
 
 
-  val db = new BookDatabase
-  val db2 = new AuthorDatabase
-  val libService = new LibraryService
+  val db: BookDatabase = new BookDatabase
+  val db2: AuthorDatabase = new AuthorDatabase
+  val libService: LibraryService = new LibraryService(db, db2)
 
   val a1 = Author("a1", "Jack Smith")
   val a2 = Author("a2", "George Woods")
