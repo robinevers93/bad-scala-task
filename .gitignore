@@ -3,3 +3,5 @@
 
 target/
 project/target/
+src/main/scala/project/
+src/main/scala/target/
