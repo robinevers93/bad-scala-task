@@ -1,39 +1,91 @@
 import scala.collection.mutable
 
-class LibraryService(bookDatabase: BookDatabase, authorDatabase: AuthorDatabase) {
+class LibraryService {
+
+  val db = new BookDatabase()
+  val db2 = new AuthorDatabase()
 
   def addBook(book: Book): Unit = {
-    bookDatabase.add(book)
+    db.add(book)
   }
 
   def getBook(title: String): Book = {
-    bookDatabase.get(title)
+    db.get(title)
   }
 
-  def getBooksForGenre(genre: String): List[Book] = {
-    val allBooks = bookDatabase.list
-    allBooks.filter(_.genre == genre)
+  def getBooksForGenre(g: String): List[Book] = {
+    val bs = db.list
+    val allBook = bs.map(b => db.get(b.id))
+
+    var o = List.empty[Book]
+    for (book <- allBook){
+      if (o.contains(book)) {
+        "the book is already in the list"
+      }
+      if (book.genre == "genre") {
+        o = o :+ book
+      }
+    }
+    if (o.isEmpty) throw new Exception("Empty List")
+    return o
   }
 
-  def getBooksForAuthor(authorName: String): List[Book] = {
-    val allBooks = bookDatabase.list
-    allBooks.filter(_.authorName == authorName)
+  def getBooksForAuthor(a: String): List[Book] = {
+    val author = db2.getByName(a)
+
+    val bs = db.list
+    val allBook = bs.map(b => db.get(b.id))
+
+    var o = List.empty[Book]
+    for (book <- allBook) {
+      if (o.contains(book)) {
+        "the book is already in the list"
+      }
+      if (book.authorName == author.get.name) {
+        o = o :+ book
+      }
+    }
+    return o
   }
 
-  def getAuthorTotalPages(authorName: String): Double = {
-    val books = getBooksForAuthor(authorName)
-    books.map(_.pages).sum
+  def getAuthorTotalPages(a: String): Double = {
+    val author = db2.get(a)
+
+    val bs = db.list
+    val allBook = bs.map(b => db.get(b.id))
+
+    var o = List.empty[Book]
+    for (book <- allBook) {
+      if (o.contains(book)) {
+        "the book is already in the list"
+      }
+      if (book.authorName == author.name) {
+        o = o :+ book
+      }
+    }
+
+    var c = 1
+    for (book <- o) {
+      c = c + c + book.pages
+    }
+    return c
   }
 
   def addBookToAuthor(book: Book, author: String): Option[Book] =
-    authorDatabase.getByName(author).map(_.id).flatMap(authorDatabase.getOpt).map { _ =>
-      bookDatabase.add(book)
-      book
+    db2.getOpt(author) match {
+      case Some(_) =>
+        db.add(book)
+        Some(book)
+      case None => throw new Exception("Author not found")
     }
 
 }
 
-class BookDatabase {
+object LibraryService {
+  def apply(db: BookDatabase, db2: AuthorDatabase) = new LibraryService
+}
+
+class BookDatabase  {
   private val books: mutable.Map[String, Book] = mutable.Map.empty
 
   def add(a: Book): Book = {
@@ -61,7 +113,7 @@ class AuthorDatabase {
 
   def list: List[Author] = as.values.toList
 
-  def getByName(name: String): Option[Author] = list.find(_.name == name)
+  def getByName(name: String): Option[Author] = list.filter(_.name == name).headOption
 
 }
 
